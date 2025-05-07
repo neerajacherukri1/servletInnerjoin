@@ -1,5 +1,12 @@
-package com.neoteric;
+package com.neoteric.dao;
 
+import com.neoteric.model.Marks;
+import com.neoteric.model.Student;
+import com.neoteric.model.StudentMarks;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,14 +14,22 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StudentMarksDAo {
+
+
+@Component
+public class
+StudentMarksDAo {
+
+
+    @Autowired
+    private DataSource dataSource;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
 
 
-
-        private final String url = "jdbc:mysql://localhost:3306/studentschema";
-        private final String user = "root";
-        private final String password = "Cherukuri@19";
 
         public List<StudentMarks> getAllStudentMarks() throws Exception {
             List<StudentMarks> list = new ArrayList<>();
@@ -22,9 +37,10 @@ public class StudentMarksDAo {
             String sql = "SELECT s.stuId, s.stuName, s.class, m.subject, m.marks " +
                     "FROM student s INNER JOIN marks m ON s.stuId = m.stuId";
 
-            Class.forName("com.mysql.cj.jdbc.Driver");
 
-            try (Connection conn = DriverManager.getConnection(url, user, password);
+
+            try (Connection conn = dataSource.getConnection();
+
                  Statement stmt = conn.createStatement();
                  ResultSet rs = stmt.executeQuery(sql)) {
 
@@ -49,6 +65,7 @@ public class StudentMarksDAo {
             return list;
         }
     }
+
 
 
 

@@ -1,4 +1,4 @@
-package com.neoteric;
+package com.neoteric.model;
 
 public class Student {
     private int stuId;

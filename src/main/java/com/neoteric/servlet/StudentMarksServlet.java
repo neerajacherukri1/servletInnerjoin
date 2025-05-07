@@ -1,10 +1,13 @@
-package com.neoteric;
+package com.neoteric.servlet;
 
+import com.neoteric.dao.StudentMarksDAo;
+import com.neoteric.model.StudentMarks;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,14 +16,26 @@ import java.util.List;
 
 public class StudentMarksServlet extends HttpServlet {
 
-        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+
+
+    private StudentMarksDAo dao;
+
+    @Override
+    public void init() {
+        WebApplicationContext context = WebApplicationContextUtils
+                .getRequiredWebApplicationContext(getServletContext());
+        dao = context.getBean(StudentMarksDAo.class);
+    }
+
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
                 throws ServletException, IOException {
 
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
 
             try {
-                StudentMarksDAo dao = new StudentMarksDAo();
+
                 List<StudentMarks> studentMarks = dao.getAllStudentMarks();
 
                 out.println("<html><body><h2>Student Marks</h2>");
